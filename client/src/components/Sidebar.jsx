@@ -4,7 +4,13 @@ import ThemeToggle from './ThemeToggle';
 export default function Sidebar({ conversations, activeId, query, onQuery, onNew, onSelect, onDelete, dark, onTheme, collapsed, onCollapse }) {
   return (
     <aside className={`sidebar ${collapsed ? 'collapsed' : ''}`}>
-      <div className="brand"><div className="brand-mark">N</div><span>Nexus AI</span><button className="icon-button sidebar-close" onClick={onCollapse}><PanelLeftClose size={18} /></button></div>
+      <div className="brand">
+        <div className="brand-mark">N</div>
+        <span>Nexus AI</span>
+        <button className="icon-button sidebar-close" onClick={onCollapse} title="Close sidebar">
+          <PanelLeftClose size={18} />
+        </button>
+      </div>
       <button className="new-chat" onClick={onNew}><MessageSquarePlus size={18} /> New conversation</button>
       <label className="search-box"><Search size={16} /><input value={query} onChange={(event) => onQuery(event.target.value)} placeholder="Search conversations" /></label>
       <div className="history-heading"><span>Recent conversations</span><MoreHorizontal size={16} /></div>

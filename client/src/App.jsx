@@ -20,8 +20,8 @@ export default function App() {
 
   return (
     <div className="app-shell">
-      <Sidebar {...chat} conversations={chat.conversations} activeId={chat.conversation?._id} query={query} onQuery={setQuery} onNew={chat.createNewConversation} onSelect={chat.selectConversation} onDelete={(id) => window.confirm('Delete this conversation?') && chat.removeConversation(id)} dark={dark} onTheme={() => setDark((value) => !value)} collapsed={collapsed} onCollapse={() => setCollapsed((value) => !value)} />
-      <ChatWindow conversation={chat.conversation} tone={chat.tone} onTone={chat.changeTone} onSend={(message) => chat.sendMessage(message)} onRegenerate={(messageId) => chat.sendMessage('', messageId)} isStreaming={chat.isStreaming} error={chat.error} onOpenSidebar={() => setCollapsed(false)} />
+      <Sidebar {...chat} conversations={chat.conversations} activeId={chat.conversation?._id} query={query} onQuery={setQuery} onNew={chat.createNewConversation} onSelect={chat.selectConversation} onDelete={(id) => window.confirm('Delete this conversation?') && chat.removeConversation(id)} dark={dark} onTheme={() => setDark((value) => !value)} collapsed={collapsed} onCollapse={() => setCollapsed(true)} />
+      <ChatWindow conversation={chat.conversation} tone={chat.tone} onTone={chat.changeTone} onSend={(message) => chat.sendMessage(message)} onRegenerate={(messageId) => chat.sendMessage('', messageId)} isStreaming={chat.isStreaming} error={chat.error} collapsed={collapsed} onToggleSidebar={() => setCollapsed((value) => !value)} />
     </div>
   );
 }

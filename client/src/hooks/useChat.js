@@ -50,7 +50,9 @@ export function useChat() {
     activeRequest.current = true;
     setIsStreaming(true);
     setError('');
-    const temporaryId = `stream-${Date.now()}`;
+    const requestId = `stream-${Date.now()}`;
+    const temporaryUserId = `${requestId}-user`;
+    const temporaryAssistantId = `${requestId}-assistant`;
     setConversation((current) => ({
       ...(current || { _id: undefined, title: message.slice(0, 60), messages: [] }),
       tone,
@@ -58,7 +60,11 @@ export function useChat() {
         ? (current?.messages || []).map((item) =>
             item._id === messageId ? { ...item, content: '', timestamp: new Date().toISOString() } : item
           )
-        : [...(current?.messages || []), { _id: temporaryId, role: 'user', content: message, timestamp: new Date().toISOString() }, { _id: temporaryId, role: 'assistant', content: '', timestamp: new Date().toISOString() }]
+        : [
+            ...(current?.messages || []),
+            { _id: temporaryUserId, role: 'user', content: message, timestamp: new Date().toISOString() },
+            { _id: temporaryAssistantId, role: 'assistant', content: '', timestamp: new Date().toISOString() }
+          ]
     }));
     try {
       await streamChat({
@@ -69,7 +75,7 @@ export function useChat() {
         onToken: (text) => setConversation((current) => ({
           ...current,
           messages: current.messages.map((item) =>
-            item.role === 'assistant' && (messageId ? item._id === messageId : item._id === temporaryId)
+            item.role === 'assistant' && (messageId ? item._id === messageId : item._id === temporaryAssistantId)
               ? { ...item, content: item.content + text }
               : item
           )
@@ -79,7 +85,7 @@ export function useChat() {
           setTone(next.tone);
           refresh();
         },
-        onError: setError
+        onError: (streamError) => setError(streamError instanceof Error ? streamError.message : String(streamError))
       });
     } catch (err) {
       setError(err.message);
