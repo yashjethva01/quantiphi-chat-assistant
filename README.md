@@ -1,90 +1,88 @@
 # Nexus AI
 
-Nexus AI is a polished, single-user local AI chat assistant built for the Quantiphi Vibe Coding Assessment. It combines a React/Vite interface with an Express/MongoDB backend and genuine token streaming from OpenAI over Server-Sent Events.
+A modern AI chat application built with React, Node.js, Express, MongoDB, and OpenAI.
 
 ## Features
 
-- Real OpenAI streaming responses with server-only API credentials
-- Conversation history persisted in MongoDB
-- Professional, casual, and concise response tones
-- Tone persistence per conversation
-- Regenerate the latest assistant response
-- Case-insensitive conversation/message search
-- Light/dark themes and responsive sidebar
-- Copy responses, suggested prompts, loading and error states
-- Request validation, CORS restriction, rate limiting, and safe error responses
+- Real OpenAI streaming responses
+- Conversation history
+- Professional, casual, and concise tones
+- Regenerate responses
+- Search conversations
+- Dark and light themes
+- Responsive sidebar
+- Copy chat responses
 
-## Technology
-
-- **Frontend:** React, Vite, CSS, Lucide React, Axios
-- **Backend:** Node.js, Express, Mongoose, OpenAI Node SDK
-- **Transport:** Fetch + Server-Sent Events
-- **Database:** MongoDB (local or Atlas)
-
-## Architecture
-
-`client/` contains the Vite app, reusable UI components, chat state hook, and API client. `server/` contains routes, controllers, the Mongoose model, database configuration, error middleware, and OpenAI service. The browser never receives `OPENAI_API_KEY`; the backend owns all database and AI operations.
-
-## Prerequisites
+## Requirements
 
 - Node.js 18 or newer
-- MongoDB locally, or a MongoDB Atlas connection string
-- An OpenAI API key with access to the configured model
+- MongoDB local installation or MongoDB Atlas
+- OpenAI API key
 
-## Installation
+## Setup
+
+1. Install dependencies:
 
 ```bash
 npm run install:all
-Copy-Item server\.env.example server\.env
 ```
 
-Edit `server/.env`:
+2. Create the environment file:
+
+```bash
+Copy-Item server/.env.example server/.env
+```
+
+3. Add your credentials to `server/.env`:
 
 ```env
-OPENAI_API_KEY=your_openai_key
+OPENAI_API_KEY=your-openai-api-key
 OPENAI_MODEL=gpt-4o-mini
 MONGODB_URI=mongodb://127.0.0.1:27017/nexus-ai
 PORT=5000
 CLIENT_URL=http://localhost:5173
 ```
 
-Create an API key from the [OpenAI platform](https://platform.openai.com/api-keys). For Atlas, create a database user, allow the development machine IP, and copy the connection string into `MONGODB_URI`.
+For MongoDB Atlas, use its MongoDB connection string:
 
-## Running
+```env
+MONGODB_URI=mongodb+srv://username:password@cluster.mongodb.net/nexus-ai
+```
 
-Run both applications from the repository root:
+## Run
+
+Start the frontend and backend together:
 
 ```bash
 npm run dev
 ```
 
-Or run them separately:
+Open:
 
-```bash
-npm --prefix server run dev
-npm --prefix client run dev
-```
+- Frontend: http://localhost:5173
+- Backend: http://localhost:5000
 
-The client runs at `http://localhost:5173` and the API runs at `http://localhost:5000`. `GET /api/health` can be used as a basic server health check.
+## API Endpoints
 
-## API
-
-| Method | Endpoint | Purpose |
+| Method | Endpoint | Description |
 | --- | --- | --- |
-| GET | `/api/conversations` | List recent conversations |
-| GET | `/api/conversations/search?q=query` | Search titles and message content |
-| GET | `/api/conversations/:id` | Load a conversation |
-| POST | `/api/chat` | Stream a new user message and assistant response |
-| POST | `/api/chat/regenerate` | Replace an assistant response by `messageId` |
-| PATCH | `/api/conversations/:id/tone` | Change the saved conversation tone |
+| GET | `/api/conversations` | Get conversations |
+| GET | `/api/conversations/search?q=query` | Search conversations |
+| GET | `/api/conversations/:id` | Get one conversation |
+| POST | `/api/chat` | Send a message |
+| POST | `/api/chat/regenerate` | Regenerate an answer |
+| PATCH | `/api/conversations/:id/tone` | Change tone |
 | DELETE | `/api/conversations/:id` | Delete a conversation |
 
-Chat endpoints return SSE events named `token`, `complete`, or `error`. The `complete` event contains the saved conversation.
+## Folder Structure
 
-## Screenshots
+```text
+client/  React frontend
+server/  Express backend
+server/models/       MongoDB models
+server/controllers/  API controllers
+server/routes/       API routes
+server/services/     OpenAI integration
+```
 
-Add screenshots of the welcome screen, active conversation, search results, and mobile layout here for a GitHub presentation.
-
-## Security notes
-
-This is intentionally a single-user local demo and does not implement authentication or conversation ownership. Do not deploy it publicly without adding authentication, authorization, HTTPS, and production-grade operational controls. Never commit `server/.env`; it is excluded by `.gitignore`.
+Do not commit `server/.env` or expose the OpenAI API key.
